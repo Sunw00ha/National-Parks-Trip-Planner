@@ -1,6 +1,11 @@
 # National Parks Trip Planner
+National Parks Trip Planner is a backend API project that helps users explore and compare U.S. national parks using data from the National Park Service API ((https://www.nps.gov/subjects/developer/index.htm)).
 
-Backend services on top of the [National Park Service API](https://www.nps.gov/subjects/developer/index.htm): compare parks by land area computed from boundary polygons, generate bar charts of how many activity categories each park lists, or bundle gallery photos into a downloadable ZIP.
+The project supports three main features:
+
+1. **Compare park sizes** by computing land area from official park boundary polygons.
+2. **Visualize activities** by generating bar charts showing how many activity categories each park offers.
+3. **Download park image galleries** by bundling National Park Service gallery photos into a ZIP file.
 
 Stack is **Python** on **AWS Lambda** + **API Gateway**, with **S3** for charts and ZIPs and **RDS (MySQL)** to cache where each park’s ZIP lives so we don’t rebuild it on every request.
 
