@@ -1,8 +1,8 @@
 # client-side
 # Names: Irene Ha, Ejean Kuo, Henron Ruan
 
-import requests
-import pathlib
+import requests # used to make the HTTP requests to API Gateway
+import pathlib # used to parse JSON responses
 import sys
 import json
 
@@ -580,7 +580,7 @@ park_map = {
 
 baseurl = "https://17t8ywcyti.execute-api.us-east-2.amazonaws.com/test"
 
-# 
+# define different API routes to call based on different Lambda functions to execute
 task1_url = baseurl + "/parkboundaries/"
 task2_url = baseurl + "/activitieschart"
 task3_url = baseurl + "/parkimages/"
@@ -605,9 +605,10 @@ def run_task1():
     # api key is safe to be public since it's read-only access to public data
     url = task1_url + parkcode.lower()
 
-
+    # send a GET request to Task 1 Lambda through API Gateway
     response = requests.get(url)
 
+    # handle bad response
     if response.status_code != 200:
         print("**ERROR: failed with status code:", response.status_code)
         if response.status_code == 500:  # we'll have an error message
@@ -641,10 +642,13 @@ def run_task2():
         print("**Error: no valid park codes entered.")
         return
 
+    # build JSON payload
     payload = {
         "parkCodes": park_codes
     }
 
+    # send POST request
+    # this calls POST /activitieschart
     response = requests.post(task2_url, json=payload)
 
     if response.status_code != 200:
@@ -656,6 +660,7 @@ def run_task2():
             print("**Raw response:", response.text)
         return
 
+    # parse response body
     outer_body = response.json()
 
     if "body" in outer_body:
@@ -680,12 +685,15 @@ def run_task3():
 
         while park_input == "list":
             print_park_codes()
-            park_input = input("Enter park a park code or type 'list to see all codes> ").strip().lower()
+            park_input = input("Enter a park code or type 'list' to see all codes> ").strip().lower()
 
-        park_code = park_input.upper()
+        # convert to upper case
+        park_code = park_input.upper() 
 
+        # build URL
         url = task3_url + park_code 
 
+        # send GET request
         response = requests.get(url)
 
         if response.status_code != 200:
