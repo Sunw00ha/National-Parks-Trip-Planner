@@ -20,10 +20,11 @@ def calculate_area(coordinates):
         x2 = math.radians(lon2) * math.cos(math.radians(lat2)) * RADIUS
         y2 = math.radians(lat2) * RADIUS
 
-        area += (x1*y2) - (x2*y1)
+        area += (x1*y2) - (x2*y1) # shoelace formula
     
     return abs(area) / 2.0
 
+# event is a dictionary containing information about the incoming HTTP request
 def lambda_handler(event, context):
    # call NPS park boundaries endpoint
     try:
@@ -33,7 +34,8 @@ def lambda_handler(event, context):
             raise Exception("request has no key 'sitecode'")
         
         sitecode = parameters["sitecode"].lower()
-        
+
+        # API key stored in Lambda configuration
         api_key = os.environ.get("API_KEY")
         nps_url = f"https://developer.nps.gov/api/v1/mapdata/parkboundaries/{sitecode}?api_key={api_key}"
         
